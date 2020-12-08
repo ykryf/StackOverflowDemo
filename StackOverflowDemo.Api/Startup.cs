@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using StackOverflowDemo.Api.Data;
+using StackOverflowDemo.Api.Extensions;
 
 namespace StackOverflowDemo.Api
 {
@@ -32,6 +35,10 @@ namespace StackOverflowDemo.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StackOverflowDemo.Api", Version = "v1" });
             });
+
+            services.AddDbContext<StackOverflow2013Context>(options 
+                => options.UseSqlServer(Configuration.GetConnectionStringUsingSecrets("LocalDev"), options 
+                => options.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
